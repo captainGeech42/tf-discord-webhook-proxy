@@ -78,7 +78,6 @@ func sendDiscordMessage(webhook TerraformWebhook) {
 			embed.Title = "Terraform Status"
 			embed.Description = fmt.Sprintf("A new Terraform notification has been sent:\n\n**%s**", n.Message)
 			embed.URL = webhook.RunURL
-			embed.URL = "https://terraform.io"
 
 			if n.RunStatus == "planned_and_finished" {
 				embed.Color = green
@@ -88,6 +87,22 @@ func sendDiscordMessage(webhook TerraformWebhook) {
 				// this includes "discarded" or any other field in
 				// https://www.terraform.io/docs/cloud/api/run.html#run-states
 				embed.Color = yellow
+			}
+
+			if n.RunStatus == "" {
+				n.RunStatus = "(null)"
+			}
+
+			if webhook.RunMessage == "" {
+				webhook.RunMessage = "(null)"
+			}
+
+			if n.RunUpdatedBy == "" {
+				n.RunUpdatedBy = "(null)"
+			}
+
+			if webhook.RunCreatedBy == "" {
+				webhook.RunCreatedBy = "(null)"
 			}
 
 			embed.Fields = []DiscordEmbedField{
@@ -129,12 +144,16 @@ func makeDiscordRequest(msg DiscordWebhook) bool {
 		return false
 	}
 
-	resp, err := http.Post(config.WebhookURL, "application/json", bytes.NewBuffer(jsonBody))
+	resp, err := http.Post(config.WebhookURL+"?wait=true", "application/json", bytes.NewBuffer(jsonBody))
 	if err != nil {
 		log.Println("Failed to make Discord webhook request: " + err.Error())
 		return false
 	}
 
-	resp.Body.Close()
+	defer resp.Body.Close()
+
+	body, _ := ioutil.ReadAll(resp.Body)
+
+	log.Println(string(body))
 	return true
 }
