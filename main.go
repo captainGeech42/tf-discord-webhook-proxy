@@ -69,6 +69,7 @@ func sendDiscordMessage(webhook TerraformWebhook) {
 	red := 0xff0000
 	green := 0x00ff00
 	yellow := 0xedb021
+	blue := 0x3b6bed
 
 	for _, n := range webhook.Notifications {
 		var discordMsg DiscordWebhook
@@ -76,13 +77,15 @@ func sendDiscordMessage(webhook TerraformWebhook) {
 		if config.RichMessages {
 			var embed DiscordEmbed
 			embed.Title = "Terraform Status"
-			embed.Description = fmt.Sprintf("A new Terraform notification has been sent:\n\n**%s**", n.Message)
+			embed.Description = fmt.Sprintf("**%s**", n.Message)
 			embed.URL = webhook.RunURL
 
-			if n.RunStatus == "planned_and_finished" {
+			if n.RunStatus == "planned_and_finished" || n.RunStatus == "applied" {
 				embed.Color = green
 			} else if n.RunStatus == "errored" {
 				embed.Color = red
+			} else if n.RunStatus == "planned" {
+				embed.Color = blue
 			} else {
 				// this includes "discarded" or any other field in
 				// https://www.terraform.io/docs/cloud/api/run.html#run-states
@@ -99,12 +102,12 @@ func sendDiscordMessage(webhook TerraformWebhook) {
 				webhook.RunMessage = "(null)"
 			}
 
-			if n.RunUpdatedBy == "" {
-				n.RunUpdatedBy = "(null)"
-			}
-
 			if webhook.RunCreatedBy == "" {
 				webhook.RunCreatedBy = "(null)"
+			}
+
+			if n.RunUpdatedBy == "" {
+				n.RunUpdatedBy = "(null)"
 			}
 
 			embed.Fields = []DiscordEmbedField{
@@ -117,13 +120,13 @@ func sendDiscordMessage(webhook TerraformWebhook) {
 					Value: webhook.RunMessage,
 				},
 				{
-					Name:   "Run Updated By",
-					Value:  n.RunUpdatedBy,
+					Name:   "Run Created By",
+					Value:  webhook.RunCreatedBy,
 					Inline: true,
 				},
 				{
-					Name:   "Run Created By",
-					Value:  webhook.RunCreatedBy,
+					Name:   "Run Updated By",
+					Value:  n.RunUpdatedBy,
 					Inline: true,
 				},
 			}
