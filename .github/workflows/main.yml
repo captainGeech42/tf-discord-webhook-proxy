@@ -8,9 +8,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Get repo
-      uses: actions/checkout@master
+    - name: Checkout code
+    - uses: actions/checkout@master
 
+    - name: Get version
       id: get_version
       run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
 
