@@ -89,6 +89,8 @@ func sendDiscordMessage(webhook TerraformWebhook) {
 				embed.Color = yellow
 			}
 
+			// if an embed field is empty the whole message won't display
+			// make sure that any field message has a value
 			if n.RunStatus == "" {
 				n.RunStatus = "(null)"
 			}
@@ -152,8 +154,5 @@ func makeDiscordRequest(msg DiscordWebhook) bool {
 
 	defer resp.Body.Close()
 
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	log.Println(string(body))
 	return true
 }
