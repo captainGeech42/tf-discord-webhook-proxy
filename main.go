@@ -90,11 +90,6 @@ func sendDiscordMessage(webhook TerraformWebhook) {
 				embed.Color = yellow
 			}
 
-			n.RunStatus = "asdf"
-			n.RunUpdatedBy = "zxcv"
-			webhook.RunCreatedBy = "qwer"
-			webhook.RunMessage = "1234"
-
 			embed.Fields = []DiscordEmbedField{
 				{
 					Name:  "Run Status",
