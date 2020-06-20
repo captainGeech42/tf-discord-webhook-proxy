@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/tkanos/gonfig"
 )
@@ -16,9 +17,25 @@ var config Config
 
 func main() {
 	// parse config
-	err := gonfig.GetConf("config.json", &config)
-	if err != nil {
-		log.Fatal("Failed to parse config: " + err.Error())
+
+	// check if env var
+	env := os.Getenv("TF_PROXY_ENV")
+	if env == "YES" {
+		// pull config from env vars
+		config.Port = 8080
+		config.WebhookURL = os.Getenv("TF_PROXY_WEBHOOK_URL")
+		rich := os.Getenv("TF_PROXY_RICH_MESSAGES")
+		if rich == "NO" {
+			config.RichMessages = false
+		} else {
+			config.RichMessages = true
+		}
+	} else {
+		// don't pull from env, look for config.json
+		err := gonfig.GetConf("config.json", &config)
+		if err != nil {
+			log.Fatal("Failed to parse config: " + err.Error())
+		}
 	}
 
 	log.Printf("Using webhook URL: %s\n", config.WebhookURL)
