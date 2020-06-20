@@ -1,12 +1,14 @@
 # Terraform -> Discord Webhook Proxy
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/captainGeech42/tf-discord-webhook-proxy)](https://goreportcard.com/report/github.com/captainGeech42/tf-discord-webhook-proxy) [![Build Status](https://travis-ci.com/captainGeech42/tf-discord-webhook-proxy.svg?branch=master)](https://travis-ci.com/captainGeech42/tf-discord-webhook-proxy) ![Docker Hub Publish](https://github.com/captainGeech42/tf-discord-webhook-proxy/workflows/Docker%20Hub%20Publish/badge.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/captainGeech42/tf-discord-webhook-proxy)](https://goreportcard.com/report/github.com/captainGeech42/tf-discord-webhook-proxy) [![Build Status](https://travis-ci.com/captainGeech42/tf-discord-webhook-proxy.svg?branch=master)](https://travis-ci.com/captainGeech42/tf-discord-webhook-proxy) [![Docker Hub Publish](https://github.com/captainGeech42/tf-discord-webhook-proxy/workflows/Docker%20Hub%20Publish/badge.svg)](https://github.com/captainGeech42/tf-discord-webhook-proxy/actions?query=workflow%3A%22Docker+Hub+Publish%22) [![Docker Hub Image](https://img.shields.io/docker/v/zzzanderw/tf-discord-webhook-proxy?color=blue)](https://hub.docker.com/repository/docker/zzzanderw/tf-discord-webhook-proxy/general)
 
 Have you ever wanted to use the webhook notification system on Terraform to notify a Discord channel of your infrastructure state changes, only to realize that they can't natively talk to each other? Well not anymore, because here's the tool you've been searching for!
 
 _Terraform webhook comes in, Discord webhook goes out, profit._
 
 By default, an embedded rich message will be sent to Discord but this can be disabled in the config file.
+
+Sample embed message:
 
 ![Rich Message](https://i.imgur.com/Q9uNRqV.png)
 
@@ -21,7 +23,7 @@ The proxy will be available at `http://host:8080/webhook`. Add that URL to a new
 
 ## Docker Image
 
-This tool is also available via a Docker image. When running via the Docker image, you can either use this image as a base image to `COPY` your `config.json` into `/app`, or set the following environment variables instead:
+This tool is also available via a Docker image on Docker Hub ([`zzzanderw/tf-discord-webhook-proxy`](https://hub.docker.com/repository/docker/zzzanderw/tf-discord-webhook-proxy)). When running via the Docker image, you can either use this image as a base image to `COPY` your `config.json` into `/app`, or set the following environment variables instead:
 
 * `TF_PROXY_ENV=YES` (without this, a `config.json` will be looked for)
 * `TF_PROXY_WEBHOOK_URL="https://discordapp.com/api/webhooks/xxxxxxxx/yyyyyyyyyyyyy"`
