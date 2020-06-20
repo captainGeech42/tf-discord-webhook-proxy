@@ -10,7 +10,9 @@ By default, an embedded rich message will be sent to Discord but this can be dis
 
 Sample embed message:
 
-![Rich Message](https://i.imgur.com/Q9uNRqV.png)
+![Rich Message](https://i.imgur.com/hkjoS4Z.png)
+
+The color of the message (on the left side) will be either green (success), red (error), blue (plan needs confirmation), or yellow (other).
 
 ## Usage
 
