@@ -1,27 +1,16 @@
-# tf-discord-webhook-proxy
-Terraform -> Discord Webhook Proxy
+# Terraform -> Discord Webhook Proxy
 
-## Terraform Webhook Sample
-```json
-{
-  "payload_version": 1,
-  "notification_configuration_id": "nc-xxxxxxxx",
-  "run_url": null,
-  "run_id": null,
-  "run_message": null,
-  "run_created_at": null,
-  "run_created_by": null,
-  "workspace_id": null,
-  "workspace_name": null,
-  "organization_name": null,
-  "notifications": [
-    {
-      "message": "Verification of Discord",
-      "trigger": "verification",
-      "run_status": null,
-      "run_updated_at": null,
-      "run_updated_by": null
-    }
-  ]
-}
-```
+Have you ever wanted to use the webhook notification system on Terraform to notify a Discord channel of your infrastructure state changes, only to realize that they can't natively talk to each other? Well not anymore, because here's the tool you've been searching for!
+
+_Terraform webhook comes in, Discord webhook goes out, profit._
+
+By default, an embedded rich message will be sent to Discord but this can be disabled in the config file.
+
+![Rich Message](https://i.imgur.com/Q9uNRqV.png)
+
+## Usage
+
+1. Download: `go get github.com/captainGeech42/tf-discord-webhook-proxy`
+2. Copy the `config.ex.json` file to your current directory as `config.json`
+3. Update the `WebhookURL` field with a Discord webhook URL ([Discord docs on webhooks](https://support.discord.com/hc/en-us/articles/228383668))
+4. Run it: `tf-discord-webhook-proxy`

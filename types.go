@@ -8,6 +8,7 @@ type Config struct {
 }
 
 // TerraformWebhook is the main webhook payload from TF
+// Struct definition is here: https://www.terraform.io/docs/cloud/api/notification-configurations.html#notification-payload
 type TerraformWebhook struct {
 	Version          int                     `json:"payload_version"`
 	ConfigID         string                  `json:"notification_configuration_id"`
