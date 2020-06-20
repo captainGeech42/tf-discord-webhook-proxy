@@ -1,5 +1,7 @@
 # Terraform -> Discord Webhook Proxy
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/captainGeech42/tf-discord-webhook-proxy)](https://goreportcard.com/report/github.com/captainGeech42/tf-discord-webhook-proxy) [![Build Status](https://travis-ci.com/captainGeech42/tf-discord-webhook-proxy.svg?branch=master)](https://travis-ci.com/captainGeech42/tf-discord-webhook-proxy)
+
 Have you ever wanted to use the webhook notification system on Terraform to notify a Discord channel of your infrastructure state changes, only to realize that they can't natively talk to each other? Well not anymore, because here's the tool you've been searching for!
 
 _Terraform webhook comes in, Discord webhook goes out, profit._
