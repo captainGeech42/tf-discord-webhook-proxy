@@ -17,6 +17,8 @@ By default, an embedded rich message will be sent to Discord but this can be dis
 3. Update the `WebhookURL` field with a Discord webhook URL ([Discord docs on webhooks](https://support.discord.com/hc/en-us/articles/228383668))
 4. Run it: `tf-discord-webhook-proxy`
 
+The proxy will be available at `http://host:8080/webhook`. Add that URL to a new Webhook Notification in the Notifications settings in your Terraform workspace.
+
 ## Docker Image
 
 This tool is also available via a Docker image. When running via the Docker image, you can either use this image as a base image to `COPY` your `config.json` into `/app`, or set the following environment variables instead:
