@@ -8,10 +8,13 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+    - name: Checkout code
+      uses: actions/checkout@master
+
     - name: Get version
       id: get_version
       run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
+
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
