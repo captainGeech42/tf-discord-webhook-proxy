@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -9,36 +10,6 @@ import (
 
 	"github.com/tkanos/gonfig"
 )
-
-// Config items in config.json
-type Config struct {
-	WebhookURL string
-	Port       int
-}
-
-// TerraformWebhook is the main webhook payload from TF
-type TerraformWebhook struct {
-	Version          int                     `json:"payload_version"`
-	ConfigID         string                  `json:"notification_configuration_id"`
-	RunURL           string                  `json:"run_url"`
-	RunID            string                  `json:"run_id"`
-	RunMessage       string                  `json:"run_message"`
-	RunCreatedAt     string                  `json:"run_created_at"`
-	RunCreatedBy     string                  `json:"run_created_by"`
-	WorkspaceID      string                  `json:"workspace_id"`
-	WorkspaceName    string                  `json:"workspace_name"`
-	OrganizationName string                  `json:"organization_name"`
-	Notifications    []TerraformNotification `json:"notifications"`
-}
-
-// TerraformNotification is the notification in the TF webhook
-type TerraformNotification struct {
-	Message      string `json:"message"`
-	Trigger      string `json:"trigger"`
-	RunStatus    string `json:"run_status"`
-	RunUpdatedAt string `json:"run_updated_at"`
-	RunUpdatedBy string `json:"run_updated_by"`
-}
 
 // global config
 var config Config
@@ -72,11 +43,86 @@ func handleIncomingWebhook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Println("Handling notifications for run " + webhook.RunID)
 	sendDiscordMessage(webhook)
+	log.Println("Finished handling notifications for run " + webhook.RunID)
 }
 
 func sendDiscordMessage(webhook TerraformWebhook) {
-	for _, s := range webhook.Notifications {
-		log.Println(s.Message)
+	red := 0xff0000
+	green := 0x00ff00
+	yellow := 0xedb021
+
+	for _, n := range webhook.Notifications {
+		var discordMsg DiscordWebhook
+
+		if config.RichMessages {
+			var embed DiscordEmbed
+			embed.Title = "Terraform Status"
+			embed.Description = fmt.Sprintf("A new Terraform notification has been sent:\n\n**%s**", n.Message)
+			embed.URL = webhook.RunURL
+			embed.URL = "https://terraform.io"
+
+			if n.RunStatus == "planned_and_finished" {
+				embed.Color = green
+			} else if n.RunStatus == "errored" {
+				embed.Color = red
+			} else {
+				// this includes "discarded" or any other field in
+				// https://www.terraform.io/docs/cloud/api/run.html#run-states
+				embed.Color = yellow
+			}
+
+			n.RunStatus = "asdf"
+			n.RunUpdatedBy = "zxcv"
+			webhook.RunCreatedBy = "qwer"
+			webhook.RunMessage = "1234"
+
+			embed.Fields = []DiscordEmbedField{
+				{
+					Name:  "Run Status",
+					Value: n.RunStatus,
+				},
+				{
+					Name:  "Run Message",
+					Value: webhook.RunMessage,
+				},
+				{
+					Name:   "Run Updated By",
+					Value:  n.RunUpdatedBy,
+					Inline: true,
+				},
+				{
+					Name:   "Run Created By",
+					Value:  webhook.RunCreatedBy,
+					Inline: true,
+				},
+			}
+
+			discordMsg.Embeds = []DiscordEmbed{embed}
+		} else {
+			discordMsg.Content = n.Message
+		}
+
+		if !makeDiscordRequest(discordMsg) {
+			log.Printf("Discord message failed to send for notification \"%s\"", n.Message)
+		}
 	}
+}
+
+func makeDiscordRequest(msg DiscordWebhook) bool {
+	jsonBody, err := json.Marshal(msg)
+	if err != nil {
+		log.Println("Failed to marshal Discord webhook: " + err.Error())
+		return false
+	}
+
+	resp, err := http.Post(config.WebhookURL, "application/json", bytes.NewBuffer(jsonBody))
+	if err != nil {
+		log.Println("Failed to make Discord webhook request: " + err.Error())
+		return false
+	}
+
+	resp.Body.Close()
+	return true
 }

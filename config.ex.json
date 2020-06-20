@@ -1,4 +1,5 @@
 {
     "WebhookURL": "https://discordapp.com/api/webhooks/xxxxxxxx/yyyyyyyyyyyyy",
-    "Port": 8080
+    "Port": 8080,
+    "RichMessages": true
 }
