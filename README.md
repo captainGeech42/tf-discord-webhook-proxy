@@ -2,7 +2,7 @@
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/captainGeech42/tf-discord-webhook-proxy)](https://goreportcard.com/report/github.com/captainGeech42/tf-discord-webhook-proxy) ![Build](https://github.com/captainGeech42/tf-discord-webhook-proxy/workflows/Build/badge.svg) [![Docker Hub Publish](https://github.com/captainGeech42/tf-discord-webhook-proxy/workflows/Docker%20Hub%20Publish/badge.svg)](https://github.com/captainGeech42/tf-discord-webhook-proxy/actions?query=workflow%3A%22Docker+Hub+Publish%22) [![Docker Hub Image](https://img.shields.io/docker/v/zzzanderw/tf-discord-webhook-proxy?color=blue)](https://hub.docker.com/repository/docker/zzzanderw/tf-discord-webhook-proxy/general)
 
-Have you ever wanted to use the webhook notification system on Terraform to notify a Discord channel of your infrastructure state changes, only to realize that they can't natively talk to each other? Well not anymore, because here's the tool you've been searching for!
+Have you ever wanted to use the webhook notification system on Terraform Cloud to notify a Discord channel of your infrastructure state changes, only to realize that they can't natively talk to each other? Well not anymore, because here's the tool you've been searching for!
 
 _Terraform webhook comes in, Discord webhook goes out, profit._
 
@@ -19,7 +19,7 @@ Sample embed message:
 3. Update the `WebhookURL` field with a Discord webhook URL ([Discord docs on webhooks](https://support.discord.com/hc/en-us/articles/228383668))
 4. Run it: `tf-discord-webhook-proxy`
 
-The proxy will be available at `http://host:8080/webhook`. Add that URL to a new Webhook Notification in the Notifications settings in your Terraform workspace.
+The proxy will be available at `http://host:8080/webhook`. Add that URL to a new Webhook Notification in the Notifications settings in your Terraform Cloud workspace.
 
 ## Docker Image
 
